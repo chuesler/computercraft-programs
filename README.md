@@ -17,7 +17,10 @@ These programs allow you to create a quarry of sorts. This is done with the help
 
 Note that this is not an early game build; you need a robust inventory system to manage the rapid influx of items as well as a sizable amount of buildcraft power.
 
-There are 4 different sets of programs here. All turtles require a wireless modem on the right side and either a crescent hammer (Wrench Turtle) or a diamond pick (Mining Turtle) on the left.
+There are 4 different sets of programs here. All turtles require a Wireless Modem on the right side and either a Crescent Hammer (Wrench Turtle) or a Diamond Pick (Mining Turtle) on the left.
+On all turtles except the command turtle, you need to adjust the first line of the programs (local serverId = ...). The correct id value can be found by executing "id" on the command turtle.
+I also recommend labeling all the turtles by using "label set ..." after placing them.
+
 * command: Wrench Turtle
   This turtle supplies power using an energy tesseract and, more importantly, sends commands to all the other turtles. This is done using <a href="http://computercraft.info/wiki/Rednet.broadcast">rednet broadcast messages</a>. This turtle can also update all the mining turtles' code. There can only be one of these (see energy below if you want higher throughput).
   
