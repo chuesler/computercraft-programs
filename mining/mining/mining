@@ -1,0 +1,70 @@
+local version = 3
+local serverId = 8
+
+function startCycle()
+  turtle.select(16)
+  turtle.place()
+  turtle.up()
+  turtle.select(15)
+  turtle.placeDown()
+  turtle.select(14)
+  turtle.place()
+end
+
+function endCycle()
+  turtle.select(14)
+  turtle.dig()
+  turtle.select(15)
+  turtle.digDown()
+  turtle.down()
+  turtle.select(16)
+  turtle.dig()
+end
+
+function refuel()
+  turtle.select(13)
+  turtle.placeUp()
+  turtle.suckUp()
+  turtle.refuel()
+  turtle.digUp()
+end
+
+-- recover from shutdown during cycle if necessary
+if turtle.getItemCount(16) == 0 then
+  endCycle()
+end
+
+print("Starting MiningWell v" .. version)
+
+rednet.open("right")
+
+while true do
+  local senderId, message = rednet.receive()
+  
+  if senderId == serverId then
+    if message == "start" then
+      startCycle()
+    elseif message == "end" then
+      endCycle()
+    elseif message:sub(1, 4) == "move" then
+      local dir, num = message:match("move (%a+) (%d+)")
+      for i = 1, tonumber(num) do
+         turtle[dir]()
+      end
+    elseif message:sub(1,6) == "update" then
+      print("Updating...")
+      file = io.open("newMining", "w")
+      file:write(message:sub(8))
+      file:flush()
+      file:close()
+      return
+    end
+  end
+  
+  if turtle.getFuelLevel() < 20 then
+    refuel()
+  end  
+  
+end
+
+rednet.close()

@@ -1,0 +1,9 @@
+sleep(5)
+while true do
+  shell.run("mining")
+  if fs.exists("newMining") then
+    fs.delete("mining")
+    fs.move("newMining", "mining")
+  end
+  sleep(5)
+end

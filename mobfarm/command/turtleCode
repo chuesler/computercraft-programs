@@ -1,0 +1,32 @@
+function cleanUp()
+  for slot = 1, 16 do
+    turtle.select(slot)
+    turtle.dropDown()
+  end
+end
+
+print('Starting mob farm - stay clear!')
+
+maxHits = math.random(1000, 2000)
+
+while true do
+  hits = 0
+  misses = 0
+  
+  while hits <= maxHits do
+    if not turtle.attack() then
+      misses = misses + 1
+      
+      if misses > 20 then
+        cleanUp()
+        sleep(5)
+      end
+    elseif misses > 0 then
+      misses = 0
+    end
+    
+    hits = hits + 1
+  end
+  cleanUp()
+end
+   

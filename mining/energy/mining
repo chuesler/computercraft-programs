@@ -1,0 +1,62 @@
+local serverId = 8
+
+print("Starting MiningPower")
+
+local function startCycle()
+  turtle.select(16)
+  turtle.place()
+  turtle.down()
+  turtle.select(15)
+  turtle.place()
+  turtle.attack()
+end
+
+local function endCycle()
+  turtle.select(15)
+  turtle.dig()
+  turtle.up()
+  turtle.select(16)
+  turtle.dig()
+end
+
+local function refuel()
+  turtle.select(14)
+  turtle.placeUp()
+  sleep(5)
+  turtle.select(14)
+  turtle.digUp()
+  turtle.select(1)
+  turtle.refuel()
+end
+
+if turtle.getFuelLevel() < 20 then
+  refuel()
+end
+
+if turtle.getItemCount(16) == 0 then
+  endCycle()
+end
+
+rednet.open("right")
+
+while true do
+  local senderId, message = rednet.receive()
+
+  if senderId == serverId then
+    if message:sub(1, 4) == "move" then
+      local dir, num = message:match("move (%a+) (%d+)")
+      for i = 1, tonumber(num) do
+        turtle[dir]()
+      end
+    elseif message == "start" then
+      startCycle()
+      
+      if turtle.getFuelLevel() < 20 then
+        refuel()
+      end
+    elseif message == "end" or message:sub(1, 6) == "update" and turtle.getItemCount(16) == 0 then
+      endCycle()
+    end
+  end  
+end
+

@@ -1,0 +1,19 @@
+
+input = io.open('turtleCode', 'r')
+
+code = ''
+
+for line in input:lines() do
+  code = code .. line .. "\n"
+end
+
+rednet.open('back')
+while true do
+  local senderId, message = rednet.receive()
+  
+  if message == 'getProgram' then
+    rednet.send(senderId, code)
+  end
+end
+
+

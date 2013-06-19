@@ -1,0 +1,25 @@
+rednet.open("right")
+
+local moves = 0
+
+while true do
+  local senderId, message, distance = rednet.receive()
+  
+  if message:sub(1,4) == "move" and distance > 15 then
+    turtle.select(16)
+    turtle.dig()
+    for i = 1, 25 do
+      turtle.forward()
+    end
+    turtle.place()
+  end
+  
+  if turtle.getFuelLevel() < 20 then
+    turtle.select(15)
+    turtle.placeUp()
+    turtle.suckUp()
+    turtle.refuel()
+    turtle.digUp()
+  end
+end
+

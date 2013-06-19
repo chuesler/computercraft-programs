@@ -1,0 +1,16 @@
+local serverId = 7
+
+local id, program
+rednet.open('right')
+repeat
+  rednet.send(serverId, 'getProgram')
+  id, program = rednet.receive(5)
+until id == serverId
+
+file = io.open('mobfarm', 'w')
+file:write(program)
+file:close()
+
+rednet.close('right')
+
+shell.run('mobfarm')

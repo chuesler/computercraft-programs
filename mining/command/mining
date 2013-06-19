@@ -1,0 +1,74 @@
+-- 15=cable, 16=tesseract
+function startCycle()
+  turtle.select(16)
+  turtle.place()
+  turtle.down()
+  turtle.select(15)
+  turtle.place()
+  turtle.attack()
+end
+
+function endCycle()
+  turtle.select(15)
+  turtle.dig()
+  turtle.up()
+  turtle.select(16)
+  turtle.dig()
+end
+
+function refuel()
+  turtle.select(14)
+  turtle.placeUp()
+  sleep(5)
+  turtle.digUp()
+  turtle.select(1)
+  turtle.refuel()
+end
+
+function sendUpdate()
+  local file = io.open("miningWellCode", "r")
+  
+  local code = ''
+  for line in file:lines() do
+    code = code .. line .. "\n"
+  end
+  file:close()
+
+  rednet.broadcast("update " .. code)
+end
+
+-- recover from shutdown during cycle, if necessary
+if turtle.getItemCount(16) == 0 then
+  endCycle()
+end
+
+print("Starting MiningCommand")
+
+rednet.open("right")
+
+sendUpdate()
+sleep(20)
+
+if true then
+--  return
+end
+
+while true do
+  startCycle()
+  rednet.broadcast("start")
+  sleep(50)
+  rednet.broadcast("end")
+  endCycle()
+  sleep(5)
+  rednet.broadcast("move forward 1")
+  turtle.forward()
+  
+  if turtle.getFuelLevel() < 20 then
+    refuel()
+  end
+end
+
+    
+
+
+
