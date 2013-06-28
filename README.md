@@ -6,9 +6,9 @@ A couple of programs for <a href="http://www.computercraft.info/">ComputerCraft<
 Tested with ComputerCraft v1.53.
 
 ### Table of contents
-[Mobfarm](#mobfarm)
-[Mining](#mining)
-[Button API](#button)
+[Mobfarm](#mobfarm) 
+[Mining](#mining) 
+[Button API](#button) 
 
 <a name="mobfarm"/>
 mobfarm
