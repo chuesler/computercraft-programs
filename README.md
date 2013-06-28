@@ -46,7 +46,7 @@ Button api
 This is an api for ComputerCraft's touch monitors. It's inspired by Direwolf20's button api, but based on what qualifies as class in lua.
 
 Usage:
-``os.loadAPI("button") -- load button api
+```os.loadAPI("button") -- load button api
 callback = function(button) 
   print("Button '" .. button.text .. "' clicked!") 
   button:flash()
@@ -55,7 +55,7 @@ b = button.new("Click me!", callback, xMin, xMax, yMin, yMax)
 
 while true do
   button.awaitClick() -- blocks
-end``
+end```
 
 ### API functions
 Function name | Description
