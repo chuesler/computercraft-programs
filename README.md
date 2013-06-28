@@ -5,12 +5,19 @@ A couple of programs for <a href="http://www.computercraft.info/">ComputerCraft<
 
 Tested with ComputerCraft v1.53.
 
+### Table of contents
+[Mobfarm][#mobfarm]
+[Mining][#mining]
+[Button API][#button]
+
+<a name="mobfarm"/>
 mobfarm
 -------
 The set of programs in the mobfarm directory are for a <a href="http://www.minecraftforum.net/topic/1475847-152">soulshards</a>-Style mob farm. Basically: You have a (rapid) source of mobs and a couple of Melee Turtles farming them.
 
 The melee turtles can be run standalone, however, you can also add another computer to support self-updating of the codebase. This was mainly useful while adjusting the code, so I didn't have to change the same code on 7 turtles.
 
+<a name="mining"/>
 mining
 ------
 These programs allow you to create a quarry of sorts. This is done with the help of a couple of mods: <a href="http://www.mod-buildcraft.com/">Buildcraft</a> (for the Mining Well), <a href="http://thermalexpansion.wikispaces.com/">Thermal Expansion</a> (Tesseracts, Redstone Energy Conduits, Wrench/Engineering Turtle) and some form of transport for the mined items (Ender Chests are a good one, either vanilla or <a href="http://www.minecraftforum.net/topic/909223-147152">Ender Storage</a>). You also need some form of chunkloading (I recommend <a href="http://www.minecraftforum.net/topic/909223-147152">ChickenChunks</a>). I suppose you could use railcraft chunkloaders as well, but you'd have to feed them with Ender Pearls.
@@ -40,6 +47,7 @@ I also recommend labeling all the turtles by using "label set ..." after placing
 
   Inventory setup is the same as the command turtle.
 
+<a name="button"/>
 Button api
 ----------
 
@@ -80,13 +88,13 @@ Method name | Description
 ### Button attributes
 Attribute | Description
 ----------|------------
-callback | Callback function, gets called with the button as argument when the button gets clicked.
-colors | Table with keys `background`, `disabled`, `enabled`, `text`. See the colors API for valid values.
-enabled | True if the button is enabled, or clickable.
-monitor | Monitor the button is rendered to. See `setMonitor` above for remarks about multi-monitor use.
-text | Button text.
-visible | True if the button is visible.
-x | Table with min/max values on the x axis (horizontal)
-y | Table with min/max values on the y axis (vertical)
+`callback` | Callback function, gets called with the button as argument when the button gets clicked.
+`colors` | Table with keys `background`, `disabled`, `enabled`, `text`. See the colors API for valid values.
+`enabled` | True if the button is enabled, or clickable.
+`monitor` | Monitor the button is rendered to. See `setMonitor` above for remarks about multi-monitor use.
+`text` | Button text.
+`visible` | True if the button is visible.
+`x` | Table with min/max values on the x axis (horizontal)
+`y` | Table with min/max values on the y axis (vertical)
 
 
