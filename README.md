@@ -39,3 +39,52 @@ I also recommend labeling all the turtles by using "label set ..." after placing
   This turtle comes into play if the number of your miners rises above 10 or so, or you just feel that the "quarry" isn't running fast enough. It's basically a clone of the command turtle, except that it listens to commands instead of sending them.
 
   Inventory setup is the same as the command turtle.
+
+Button api
+----------
+
+This is an api for ComputerCraft's touch monitors. It's inspired by Direwolf20's button api, but based on what qualifies as class in lua.
+
+Usage:
+``os.loadAPI("button") -- load button api
+callback = function(button) 
+  print("Button '" .. button.text .. "' clicked!") 
+  button:flash()
+end
+b = button.new("Click me!", callback, xMin, xMax, yMin, yMax)
+
+while true do
+  button.awaitClick() -- blocks
+end``
+
+### API functions
+Function name | Description
+--------------|------------
+`awaitClick()` | Waits for a `monitor_touch` event and calls all applicable button callbacks (should only be one unless you overlap your buttons). You probably want to call this inside a loop.
+`new(text, callback, xMin, xMax, yMin, yMax, colors)` | Creates a new button. Colors is an optional table with keys `text`, `background`, `enabled` and `disabled`. They are all optional and default to `colors.white`, `colors.black`, `colors.lime` and `colors.red`, respectively.
+`remove(button)` | Removes the button from the internal button list, thus rendering it unclickable. Not sure if this is useful unless you create tons of temporary buttons (consider reusing them).
+`setMonitor(monitor)` | Set the (default) monitor explicitely. This is really only useful if you have more than one monitor attached to your computer, because the auto-detection will do this for you otherwise. Note: This is a global setting. This API does not support more than one monitor (unless you implement your own version of `awaitClick` and set the monitor on each button manually).
+
+### Button methods
+Method name | Description
+------------|------------
+`disable()` | Disables a button. Default is enabled.
+`display()` | Display the button on screen.
+`enable()` | Enables a button. Default is enabled.
+`flash(interval)` | Disables the button, waits for the interval, and enables it again. The interval argument is optional and defaults to 0.15s.
+`hide()` | Hide the button. Default is visible.
+`show()` | Show the button. Default is visible.
+
+### Button attributes
+Attribute | Description
+----------|------------
+callback | Callback function, gets called with the button as argument when the button gets clicked.
+colors | Table with keys `background`, `disabled`, `enabled`, `text`. See the colors API for valid values.
+enabled | True if the button is enabled, or clickable.
+monitor | Monitor the button is rendered to. See `setMonitor` above for remarks about multi-monitor use.
+text | Button text.
+visible | True if the button is visible.
+x | Table with min/max values on the x axis (horizontal)
+y | Table with min/max values on the y axis (vertical)
+
+
