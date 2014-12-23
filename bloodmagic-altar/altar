@@ -1,0 +1,126 @@
+local chest = peripheral.find('iron') --'container_chest' for wooden chests
+local altar = peripheral.find('tealtar')
+
+local chestToTurtle = 'south'
+local altarToTurtle = 'east'
+
+local debugEnabled = true
+
+if not chest or not altar then
+  error('Setup error: Failed to find peripherals')
+end
+
+local slates = {
+  { id = 'AWWayofTime:blankSlate', amount = 64, essence = 1000, input = 'minecraft:stone' },
+  { id = 'AWWayofTime:reinforcedSlate', amount = 64, essence = 2000, input = 'AWWayofTime:blankSlate' },
+  { id = 'AWWayofTime:imbuedSlate', amount  =  64, essence = 5000, input = 'AWWayofTime:reinforcedSlate' },
+  { id = 'AWWayofTime:demonicSlate', amount  =  64, essence = 15000, input = 'AWWayofTime:imbuedSlate' },
+  { id = 'AWWayofTime:bloodMagicBaseItems:27', amount = 64, essence = 30000, input = 'AWWayofTime:demonicSlate' }
+}
+
+local orb = 'AWWayofTime:archmageBloodOrb'
+
+function debug(msg)
+  if debugEnabled then
+    print(msg)
+  end
+end
+
+-- inspects the chest and returns relevant information about it's contents
+function getChestContents()
+  local contents = {}
+  local stacks = chest.getAllStacks()
+    
+  for i=1,chest.getInventorySize() do
+    local stack = stacks[i]
+    
+    if stack then
+      local id = idToString(stack.id, stack.dmg)
+      
+      if contents[id] then
+        contents[id].amount = contents[id].amount + stack.qty
+      else
+        contents[id] = { amount = stack.qty, slots={} }
+      end
+      table.insert(contents[id].slots, { slot=i, size=stack.qty })
+
+--      debug(id .. ': ' .. contents[id].amount)
+    end
+  end
+
+  return contents  
+end
+
+function idToString(id, damage)
+  if not damage or damage == 0 then
+    return id
+  else
+    return id .. ":" .. damage
+  end
+end
+
+function selectSlate()
+  local tank = altar.getTankInfo('up')[1]
+  local chestContents = getChestContents()
+  
+  local haveAllSlates = true
+
+  for i, slate in ipairs(slates) do
+    if (not chestContents[slate.id] or chestContents[slate.id].amount < slate.amount) then
+      haveAllSlates = false
+
+      if tank.amount >= slate.essence
+        and chestContents[slate.input] and chestContents[slate.input].amount > 0 then
+        return slate, chestContents[slate.input]
+      end
+    end      
+  end
+
+  if haveAllSlates then
+    return true, chestContents[orb]
+  end
+
+  return false
+end
+
+function pushToAltar(slot, amount)
+  chest.pushItem(chestToTurtle, slot, amount or 1)
+  altar.pullItem(altarToTurtle, 1)
+end
+
+function pushToChest()
+  altar.pushItem(altarToTurtle, 1)
+  chest.pullItem(chestToTurtle, 1)
+end
+
+function waitForItem(id)
+  while true do
+    local stack = altar.getStackInSlot(1)
+    if stack and idToString(stack.id, stack.dmg) == id then
+      return
+    end
+
+    sleep(1)
+  end
+end
+
+function create(slate, input) 
+  pushToAltar(input.slots[1].slot, 1)
+  pcall(waitForItem, slate.id)
+  pushToChest()
+end
+
+while true do
+  local selected, input = selectSlate()
+  
+  if type(selected) == 'table' and input then
+    pushToChest()
+    create(selected, input)
+  elseif selected then
+    debug('All slates done, switching to orb')
+    pushToAltar(input.slots[1].slot, 1)
+  else
+    debug('Waiting for resources')
+    sleep(5)
+  end
+end

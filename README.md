@@ -97,4 +97,8 @@ Attribute | Description
 `x` | Table with min/max values on the x axis (horizontal)
 `y` | Table with min/max values on the y axis (vertical)
 
+Blood Magic Altar
+-----------------
+
+Uses OpenPeripherals inventory management apis to automatically create Blood Magic slates in the altar. Requires a turtle, an altar and a chest.
 
