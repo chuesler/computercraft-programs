@@ -1,0 +1,54 @@
+local timerId = nil
+local lastFuelUpdate = nil
+
+function startTimer()
+  if timerId ~= nil then
+    os.cancelTimer(timerId)
+  end
+  timerId = os.startTimer(10)
+end
+
+function ejectFuel()
+  rs.setOutput('left', true)
+  sleep(1)
+  rs.setOutput('left', false)
+  sleep(10)
+  startTimer()
+end
+
+function printStatus(event)
+  if event ~= 'timer' and event ~= 'redstone' then
+    return
+  end
+  
+  term.clearLine()
+  local oldx, oldy = term.getCursorPos()
+  term.setCursorPos(1, oldy)
+  
+  local time = textutils.formatTime(os.time(), true)
+  local day = os.day()
+
+  if event == 'timer' then
+    term.write('Currently refueling.')
+    lastFuelUpdate = 'day '..tostring(day)..' at '..time
+  else
+    term.write('Waiting.')
+    if lastFuelUpdate ~= nil then
+      term.write(' Last refuel: '..lastFuelUpdate)
+    end
+  end
+end    
+
+startTimer()
+
+while true do
+
+  local event, param = os.pullEvent()
+  printStatus(event)  
+  if event == 'timer' and param == timerId then
+    ejectFuel()
+  elseif event == 'redstone' and rs.getInput('right') then
+    startTimer()
+  end
+end
+
